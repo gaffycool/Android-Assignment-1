@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AndroidDay3</string>
+    <string name="appLogo">appLogo</string>
+    <string name="createAccountTxt">createAccountTxt</string>
+    <string name="createTxt">Create an account</string>
+    <string name="emailTxt">Email address</string>
+    <string name="createPassTxt">Create password</string>
+    <string name="createPass" />
+    <string name="repeatPassTxt">Repeat password</string>
+</resources>
