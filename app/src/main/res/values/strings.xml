@@ -7,4 +7,10 @@
     <string name="createPassTxt">Create password</string>
     <string name="createPass" />
     <string name="repeatPassTxt">Repeat password</string>
+    <string name="profileNameText">Name</string>
+    <string name="profileUsernameText">Username/Email</string>
+    <string name="profilePasswordText">Password</string>
+    <string name="changePhotoTxt">Change Photo</string>
+    <string name="ageTxt">Age</string>
+    <string name="btnSave">Save</string>
 </resources>
