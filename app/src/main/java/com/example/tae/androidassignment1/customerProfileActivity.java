@@ -196,7 +196,7 @@ public class customerProfileActivity extends AppCompatActivity {
                 if (bitmap != null) {
                     bitmap.recycle();
                     Uri uri = data.getData();
-                    //Toast.makeText(getApplicationContext(), "" + uri.toString() , Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Path to file: " + uri.toString() , Toast.LENGTH_LONG).show();
                 }
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream);
