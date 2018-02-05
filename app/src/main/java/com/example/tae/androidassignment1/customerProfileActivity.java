@@ -1,8 +1,13 @@
 package com.example.tae.androidassignment1;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +43,7 @@ public class customerProfileActivity extends AppCompatActivity {
     private Bitmap bitmap;
     ImageView imgProfile;
     private Spinner sCountry;
-    String genderSelected, selectCountry;
+    String genderSelected, selectCountry, profileImgDir;
     int year_x, month_x, day_x;
     //static final int DIALOG_ID = 0;
     RadioGroup rgGender;
@@ -91,12 +99,6 @@ public class customerProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void getCreateAccountDetails() {
-        CreateAccountModel customers = getIntent().getParcelableExtra("customer");
-        etEmail.setText(customers.mEmail);
-        etPassword.setText(customers.mPassword);
-    }
-
     public void saveDetails() {
         /*CustomerModel customerProfile = new CustomerModel(
                 etName.getText().toString(),
@@ -112,7 +114,11 @@ public class customerProfileActivity extends AppCompatActivity {
 
     }
 
-
+    public void getCreateAccountDetails() {
+        CreateAccountModel customers = getIntent().getParcelableExtra("customer");
+        etEmail.setText(customers.mEmail);
+        etPassword.setText(customers.mPassword);
+    }
 
     public void showDate()
     {
@@ -133,15 +139,6 @@ public class customerProfileActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-   /* private DatePickerDialog.OnDateSetListener dPickerListner = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-            year_x = year;
-            month_x = monthOfYear;
-            day_x = dayOfMonth;
-            Toast.makeText(getApplicationContext(),day_x + "/" + month_x + "/" + year_x, Toast.LENGTH_LONG).show();
-        }
-    };*/
     public void getGender(int i)
     {
         switch(i){
@@ -194,13 +191,15 @@ public class customerProfileActivity extends AppCompatActivity {
         InputStream stream = null;
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK)
             try {
+
                 // recyle unused bitmaps
                 if (bitmap != null) {
                     bitmap.recycle();
+                    Uri uri = data.getData();
+                    //Toast.makeText(getApplicationContext(), "" + uri.toString() , Toast.LENGTH_LONG).show();
                 }
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream);
-
                 imgProfile.setImageBitmap(bitmap);
 
             } catch (FileNotFoundException e) {
