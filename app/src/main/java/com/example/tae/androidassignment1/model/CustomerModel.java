@@ -3,51 +3,110 @@ package com.example.tae.androidassignment1.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by laFerrari on 03/02/2018.
  */
 
-public class CustomerModel implements Parcelable {
+public class CustomerModel extends RealmObject {
 
-    public String mName;
-    public String mEmail;
-    public String mPassword;
-    public int mAge;
+    String nName;
+    String nEmail;
+    String nPassword;
+    String nProfilDir;
+    String nAge;
+    String nDatePicker;
+    String nCountry;
+    String nGender;
+    String nPostalAddress;
 
-    public CustomerModel(String mName, String mEmail, String mPassword, int mAge) {
-        this.mName = mName;
-        this.mEmail = mEmail;
-        this.mPassword = mPassword;
-        this.mAge = mAge;
-    }
-    @Override
-    public int describeContents() {
-        return 0;
+    public CustomerModel() {
+        super();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.mName);
-        dest.writeString(this.mEmail);
-        dest.writeString(this.mPassword);
-        dest.writeInt(this.mAge);
+    public CustomerModel(String nName, String nEmail, String nPassword, String nProfilDir, String nAge, String nDatePicker, String nCountry, String nGender, String nPostalAddress) {
+        this.nName = nName;
+        this.nEmail = nEmail;
+        this.nPassword = nPassword;
+        this.nProfilDir = nProfilDir;
+        this.nAge = nAge;
+        this.nDatePicker = nDatePicker;
+        this.nCountry = nCountry;
+        this.nGender = nGender;
+        this.nPostalAddress = nPostalAddress;
     }
 
-    protected CustomerModel(Parcel in) {
-        this.mName = in.readString();
-        this.mEmail = in.readString();
-        this.mPassword = in.readString();
-        this.mAge = in.readInt();
+    public String getnName() {
+        return nName;
     }
 
-    public static final Creator<CustomerModel> CREATOR = new Creator<CustomerModel>() {
-        @Override
-        public CustomerModel createFromParcel(Parcel source) {
-            return new CustomerModel(source);
-        }
-        @Override
-        public CustomerModel[] newArray(int size) {
-            return new CustomerModel[size];
-        }
-    };
+    public void setnName(String nName) {
+        this.nName = nName;
+    }
+
+    public String getnEmail() {
+        return nEmail;
+    }
+
+    public void setnEmail(String nEmail) {
+        this.nEmail = nEmail;
+    }
+
+    public String getnPassword() {
+        return nPassword;
+    }
+
+    public void setnPassword(String nPassword) {
+        this.nPassword = nPassword;
+    }
+
+    public String getnProfilDir() {
+        return nProfilDir;
+    }
+
+    public void setnProfilDir(String nProfilDir) {
+        this.nProfilDir = nProfilDir;
+    }
+
+    public String getnAge() {
+        return nAge;
+    }
+
+    public void setnAge(String nAge) {
+        this.nAge = nAge;
+    }
+
+    public String getnDatePicker() {
+        return nDatePicker;
+    }
+
+    public void setnDatePicker(String nDatePicker) {
+        this.nDatePicker = nDatePicker;
+    }
+
+    public String getnCountry() {
+        return nCountry;
+    }
+
+    public void setnCountry(String nCountry) {
+        this.nCountry = nCountry;
+    }
+
+    public String getnGender() {
+        return nGender;
+    }
+
+    public void setnGender(String nGender) {
+        this.nGender = nGender;
+    }
+
+    public String getnPostalAddress() {
+        return nPostalAddress;
+    }
+
+    public void setnPostalAddress(String nPostalAddress) {
+        this.nPostalAddress = nPostalAddress;
+    }
 }
+
