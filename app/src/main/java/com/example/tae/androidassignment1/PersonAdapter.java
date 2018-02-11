@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,21 +45,21 @@ class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
-        holder.mName.setText((arrayList.get(position).getnName()));
-        holder.mEmail.setText((arrayList.get(position).getnEmail()));
-        holder.mPass.setText((arrayList.get(position).getnPassword()));
-        holder.mAge.setText((arrayList.get(position).getnAge()));
-        holder.mDOB.setText((arrayList.get(position).getnDatePicker()));
-        holder.mCountry.setText((arrayList.get(position).getnCountry()));
-        holder.mGender.setText((arrayList.get(position).getnGender()));
-        holder.mPhoto.setTag((arrayList.get(position).getnProfilDir()));
-
-       // holder.mPhoto.(arrayList.get(position).getnProfilDir()));
-
-
-
-
+        if(arrayList.get(position).getnProfilDir() != null){
+            Bitmap bitmapPhoto = BitmapFactory.decodeByteArray(
+                    arrayList.get(position).getnProfilDir(),
+                    0,
+                    arrayList.get(position).getnProfilDir().length);
+            holder.mPhoto.setImageBitmap(bitmapPhoto);
+        }
+        holder.mName.setText(arrayList.get(position).getnName());
+        holder.mEmail.setText(arrayList.get(position).getnEmail());
+        holder.mPass.setText(arrayList.get(position).getnPassword());
+        holder.mAge.setText(arrayList.get(position).getnAge());
+        holder.mDOB.setText(arrayList.get(position).getnDatePicker());
+        holder.mCountry.setText(arrayList.get(position).getnCountry());
+        holder.mGender.setText(arrayList.get(position).getnGender());
+       // holder.mPhoto.setImageURI(Uri.parse(arrayList.get(position).getnProfilDir()));
 
         //holder.getnPostalAddress.setText((arrayList.get(position).getnPostalAddress()));
         holder.callItemClick(new ItemClickListener() {
@@ -82,6 +83,7 @@ class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.MyViewHolder> {
         /*cache view reference*/
         private TextView mName, mEmail, mPass, mAge, mDOB, mCountry, mGender;
         private ImageView mPhoto;
+
         private ItemClickListener itemClickListener;
 
         public MyViewHolder(View itemView)

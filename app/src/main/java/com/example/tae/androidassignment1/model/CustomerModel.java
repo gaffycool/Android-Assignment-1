@@ -14,7 +14,7 @@ public class CustomerModel extends RealmObject {
     String nName;
     String nEmail;
     String nPassword;
-    String nProfilDir;
+    byte[] nProfilDir;
     String nAge;
     String nDatePicker;
     String nCountry;
@@ -25,7 +25,7 @@ public class CustomerModel extends RealmObject {
         super();
     }
 
-    public CustomerModel(String nName, String nEmail, String nPassword, String nProfilDir, String nAge, String nDatePicker, String nCountry, String nGender, String nPostalAddress) {
+    public CustomerModel(String nName, String nEmail, String nPassword, byte[] nProfilDir, String nAge, String nDatePicker, String nCountry, String nGender, String nPostalAddress) {
         this.nName = nName;
         this.nEmail = nEmail;
         this.nPassword = nPassword;
@@ -61,11 +61,11 @@ public class CustomerModel extends RealmObject {
         this.nPassword = nPassword;
     }
 
-    public String getnProfilDir() {
+    public byte[] getnProfilDir() {
         return nProfilDir;
     }
 
-    public void setnProfilDir(String nProfilDir) {
+    public void setnProfilDir(byte[] nProfilDir) {
         this.nProfilDir = nProfilDir;
     }
 

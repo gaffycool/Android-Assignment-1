@@ -43,7 +43,7 @@ public class viewCustomerDetails extends ListActivity {
             stringArrayList.add(arrayList.get(i).getnName());
             stringArrayList.add(arrayList.get(i).getnEmail());
             stringArrayList.add(arrayList.get(i).getnPassword());
-            stringArrayList.add(arrayList.get(i).getnProfilDir());
+           // stringArrayList.add(arrayList.get(i).getnProfilDir());
             stringArrayList.add(arrayList.get(i).getnAge());
             stringArrayList.add(arrayList.get(i).getnDatePicker());
             stringArrayList.add(arrayList.get(i).getnCountry());

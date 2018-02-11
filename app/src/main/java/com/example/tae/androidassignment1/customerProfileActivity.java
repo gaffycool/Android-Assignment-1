@@ -2,6 +2,7 @@ package com.example.tae.androidassignment1;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -21,11 +22,13 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.graphics.BitmapFactory;
@@ -37,18 +40,18 @@ import com.example.tae.androidassignment1.controller.RealmHelper;
 import com.example.tae.androidassignment1.model.CreateAccountModel;
 import com.example.tae.androidassignment1.model.CustomerModel;
 
+import static android.content.Intent.ACTION_OPEN_DOCUMENT;
+
 public class customerProfileActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword, etName, etAge, postalAddress;
     private Button btnSave, btnChangePhoto, btnDatePicker;
-    private static final int REQUEST_CODE = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Bitmap bitmap;
+    static int ACTION_REQUEST = 1;
+    private Bitmap resultPhoto;
     ImageView imgProfile;
     private Spinner sCountry;
-    String genderSelected, selectCountry;
-    public String profileImgDir, ageS, mCurrentPhotoPath;
+    String genderSelected, selectCountry, mCurrentPhotoPath;
+    public String profileImgDir, ageS;
     int year_x, month_x, day_x;
     //static final int DIALOG_ID = 0;
     RadioGroup rgGender;
@@ -56,7 +59,7 @@ public class customerProfileActivity extends AppCompatActivity {
     Realm realm;
     RealmHelper realmHelper;
     RealmBackupRestore realmBackupRestore;
-
+    byte[] photoData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,6 @@ public class customerProfileActivity extends AppCompatActivity {
         postalAddress = findViewById(R.id.txtPostalAddress);
         btnDatePicker = findViewById(R.id.btnDatePicker);
         getCreateAccountDetails();
-
         //init();
         initRealm();
 
@@ -100,6 +102,7 @@ public class customerProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pickImage();
+                //setPic();
             }
         });
 
@@ -116,9 +119,8 @@ public class customerProfileActivity extends AppCompatActivity {
         realmHelper = new RealmHelper((realm));
     }
 
-    public void getGender(int i)
-    {
-        switch(i){
+    public void getGender(int i) {
+        switch (i) {
             case R.id.rbFemale:
                 genderSelected = "Female";
                 break;
@@ -139,11 +141,12 @@ public class customerProfileActivity extends AppCompatActivity {
 
     public void saveDetails() {
 
+        //setPic();
         CustomerModel customerModel =
                 new CustomerModel(etName.getText().toString(),
                         etEmail.getText().toString(),
                         etPassword.getText().toString(),
-                        mCurrentPhotoPath,
+                        photoData,
                         etAge.getText().toString(),
                         btnDatePicker.getText().toString(),
                         selectCountry,
@@ -184,8 +187,8 @@ public class customerProfileActivity extends AppCompatActivity {
 
             }
         }, year_x, month_x, day_x);
-              etAge.setText(ageS);
-             datePickerDialog.show();
+        etAge.setText(ageS);
+        datePickerDialog.show();
     }
 
     public void chooseCountry() {
@@ -211,77 +214,25 @@ public class customerProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void pickImage() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 1);
+
+    private void pickImage() {
+        {
+            Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(photoIntent, RESULT_OK);
+        }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-         final int REQUEST_IMAGE_CAPTURE = 1;
-         final int REQUEST_OK = 1;
-
-        if (resultCode == RESULT_OK) {
-            try {
-                final Uri imageUri = data.getData();
-                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                imgProfile.setImageBitmap(selectedImage);
-
-                mCurrentDate = Calendar.getInstance();
-                day_x = mCurrentDate.get(Calendar.DAY_OF_MONTH);
-                month_x = mCurrentDate.get(Calendar.MONTH);
-                year_x = mCurrentDate.get(Calendar.YEAR);
-
-                String imageFileName = "JPEG_" + day_x + "/" + month_x + "/" + year_x + "_";
-                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-                File image = File.createTempFile(
-                        imageFileName,  /* prefix */
-                           ".jpg",         /* suffix */
-                          storageDir      /* directory */
-                         );
-                mCurrentPhotoPath = image.getAbsolutePath();
-
-
-
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }else {
-            Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap resultPhoto = (Bitmap) extras.get("data");
+            imgProfile.setImageBitmap(resultPhoto);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            resultPhoto.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            photoData = stream.toByteArray();
         }
-
-        }
-
-
-
-
-    /*private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }*/
+    }
 }
+
